@@ -18,10 +18,10 @@ SRC_URI="
 	https://github.com/kiss-community/bin/releases/download/ff-${PV}/${MY_PN}@${MY_PV}.tar.xz
 		-> ${PF}.tar.xz
 	hardened? (
-		${PRIVACY}/files/policies-${HARDENED_PV}.json
-			-> ${PN}.policies-${HARDENED_PV}.json
-		${PRIVACY}/files/vendor-${HARDENED_PV}.js
-			-> ${PN}.vendor-${HARDENED_PV}.js
+		${PRIVACY}/files/policies.json
+			-> ${PN}.policies.json
+		${PRIVACY}/files/vendor.js
+			-> ${PN}.vendor.js
 	)
 "
 IUSE="elibc_musl +hardened"
