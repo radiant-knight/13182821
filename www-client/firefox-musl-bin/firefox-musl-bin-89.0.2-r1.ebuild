@@ -35,7 +35,7 @@ RESTRICT="strip"
 RDEPEND="
 	dev-libs/atk
 	>=dev-libs/glib-2.26:2
-	dev-libs/libffi:0/7
+	dev-libs/libffi:0/8
 	>=dev-libs/nspr-4.29
 	>=dev-libs/nss-3.62
 	media-libs/alsa-lib
