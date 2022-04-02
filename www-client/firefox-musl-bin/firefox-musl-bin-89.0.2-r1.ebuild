@@ -90,9 +90,9 @@ src_install() {
 
 	use hardened && {
 		insinto "/usr/lib/${MY_PN}/browser/defaults/preferences"
-		newins "${DISTDIR}/${PN}.vendor-${HARDENED_PV}.js" vendor.js
+		newins "${DISTDIR}/${PN}.vendor.js" vendor.js
 
 		insinto "/usr/lib/${MY_PN}/distribution"
-		newins "${DISTDIR}/${PN}.policies-${HARDENED_PV}.json" policies.json
+		newins "${DISTDIR}/${PN}.policies.json" policies.json
 	}
 }
