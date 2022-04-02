@@ -15,7 +15,7 @@ HOMEPAGE="
 	https://github.com/kiss-community/repo-main/tree/master/extra/firefox
 "
 SRC_URI="
-	https://github.com/kiss-community/repo-bin/releases/download/ff-${PV}/${MY_PN}@${MY_PV}.tar.xz
+	https://github.com/kiss-community/bin/releases/download/ff-${PV}/${MY_PN}@${MY_PV}.tar.xz
 		-> ${PF}.tar.xz
 	hardened? (
 		${PRIVACY}/files/policies-${HARDENED_PV}.json
