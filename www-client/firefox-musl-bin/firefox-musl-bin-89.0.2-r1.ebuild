@@ -7,7 +7,7 @@ MY_PV=${PVR/r/}
 MY_PN=${PN%%-musl-bin}
 
 HARDENED_PV='1.0'
-PRIVACY="https://github.com/kiss-community/repo-main/raw/master/extra/firefox-privacy"
+PRIVACY="https://github.com/kiss-community/repo/tree/master/extra/firefox-privacy"
 
 DESCRIPTION="Firefox binary from KISS linux (for musl libc)"
 HOMEPAGE="
