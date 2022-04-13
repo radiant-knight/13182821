@@ -6,7 +6,6 @@ EAPI=7
 MY_PV=${PVR/r/}
 MY_PN=${PN%%-musl-bin}
 
-HARDENED_PV='1.0'
 PRIVACY="https://github.com/kiss-community/repo/tree/master/extra/firefox-privacy"
 
 DESCRIPTION="Firefox binary from KISS linux (for musl libc)"
@@ -35,7 +34,7 @@ RESTRICT="strip"
 RDEPEND="
 	dev-libs/atk
 	>=dev-libs/glib-2.26:2
-	dev-libs/libffi:0/7
+	dev-libs/libffi:0/8
 	>=dev-libs/nspr-4.29
 	>=dev-libs/nss-3.62
 	media-libs/alsa-lib
@@ -90,9 +89,9 @@ src_install() {
 
 	use hardened && {
 		insinto "/usr/lib/${MY_PN}/browser/defaults/preferences"
-		newins "${DISTDIR}/${PN}.vendor-${HARDENED_PV}.js" vendor.js
+		newins "${DISTDIR}/${PN}.vendor.js" vendor.js
 
 		insinto "/usr/lib/${MY_PN}/distribution"
-		newins "${DISTDIR}/${PN}.policies-${HARDENED_PV}.json" policies.json
+		newins "${DISTDIR}/${PN}.policies.json" policies.json
 	}
 }
