@@ -33,8 +33,11 @@ RESTRICT="strip"
 
 RDEPEND="
 	dev-libs/atk
+	app-arch/bzip2
 	>=dev-libs/glib-2.26:2
+	x11-libs/libdrm
 	dev-libs/libffi:0/8
+	dev-libs/wayland
 	>=dev-libs/nspr-4.29
 	>=dev-libs/nss-3.62
 	media-libs/alsa-lib
@@ -43,7 +46,7 @@ RDEPEND="
 	>=media-libs/harfbuzz-2.6.8:0=
 	>=media-libs/libpng-1.6.35:0=[apng]
 	sys-devel/gcc:11=
-	~sys-libs/musl-1.2.2
+	sys-libs/musl
 	>=sys-libs/zlib-1.2.3
 	>=x11-libs/cairo-1.10[X]
 	x11-libs/gdk-pixbuf
@@ -58,6 +61,7 @@ RDEPEND="
 	x11-libs/libXrender
 	x11-libs/libXt
 	x11-libs/libxcb
+	x11-libs/libxkbcommon
 	>=x11-libs/pango-1.22.0
 	>=x11-libs/pixman-0.19.2
 
