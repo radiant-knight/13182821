@@ -36,7 +36,6 @@ RDEPEND="
 
 	>=x11-themes/adwaita-icon-theme-40.0
 	>=x11-themes/gnome-themes-standard-3.28
-	#>=x11-themes/gnome-backgrounds-${P_RELEASE}
 
 	>=x11-terms/gnome-terminal-3.40.0
 "
