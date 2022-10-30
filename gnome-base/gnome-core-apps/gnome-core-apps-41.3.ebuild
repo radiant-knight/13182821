@@ -28,11 +28,11 @@ RDEPEND="
 	>=gnome-extra/evolution-data-server-3.42.3
 
 	>=app-crypt/seahorse-41.0
-	>=app-editors/gedit-41
-	>=app-text/evince-41.3
+	!>=app-editors/gedit-41
+	!>=app-text/evince-41.3
 	!>=gnome-extra/gnome-contacts-41.0
 	>=media-gfx/eog-41.1
-	>=media-video/totem-3.38.2
+	!>=media-video/totem-3.38.2
 	>=x11-terms/gnome-terminal-3.42.2
 
 	!>=gnome-extra/gnome-user-docs-41.1
