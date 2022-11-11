@@ -48,7 +48,7 @@ DEPEND="${COMMON_DEPEND}
 "
 RDEPEND="${COMMON_DEPEND}
 	media-fonts/hack
-	media-fonts/noto
+	!media-fonts/noto
 "
 BDEPEND="
 	>=dev-qt/qtwaylandscanner-${QTMIN}:5
