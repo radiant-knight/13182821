@@ -32,6 +32,7 @@ RDEPEND="
 	libedit? ( dev-libs/libedit:0=[${MULTILIB_USEDEP}] )
 	libffi? ( >=dev-libs/libffi-3.0.13-r1:0=[${MULTILIB_USEDEP}] )
 	ncurses? ( >=sys-libs/ncurses-5.9-r3:0=[${MULTILIB_USEDEP}] )
+	polly? ( sys-libs/polly:${LLVM_MAJOR}= )
 	xar? ( app-arch/xar )
 	xml? ( dev-libs/libxml2:2=[${MULTILIB_USEDEP}] )
 	z3? ( >=sci-mathematics/z3-4.7.1:0=[${MULTILIB_USEDEP}] )
@@ -68,7 +69,7 @@ PDEPEND="
 	binutils-plugin? ( >=sys-devel/llvmgold-${LLVM_MAJOR} )
 "
 
-LLVM_COMPONENTS=( llvm polly cmake )
+LLVM_COMPONENTS=( llvm cmake )
 LLVM_TEST_COMPONENTS=( third-party )
 LLVM_MANPAGES=1
 LLVM_USE_TARGETS=provide
@@ -123,10 +124,10 @@ check_distribution_components() {
 
 				case ${l} in
 					# shared libs
-					LLVM|LLVMgold|Polly)
+					LLVM|LLVMgold)
 						;;
 					# TableGen lib + deps
-					LLVMDemangle|LLVMSupport|LLVMTableGen|LLVMExtensions)
+					LLVMDemangle|LLVMSupport|LLVMTableGen)
 						;;
 					# static libs
 					LLVM*)
@@ -374,19 +375,12 @@ multilib_src_configure() {
 		-DOCAMLFIND=NO
 	)
 
-    local enable_projects=""
-    use polly && enable_projects+="polly"
-    if [[ ! -z "$enable_projects" ]]; then
-        mycmakeargs+=( -DLLVM_ENABLE_PROJECTS="${enable_projects#;}" )
-    fi
-
 	local suffix=
 	if [[ -n ${EGIT_VERSION} && ${EGIT_BRANCH} != release/* ]]; then
 		# the ABI of the main branch is not stable, so let's include
 		# the commit id in the SOVERSION to contain the breakage
 		suffix+="git${EGIT_VERSION::8}"
 	fi
-
 	if [[ $(tc-get-cxx-stdlib) == libc++ ]]; then
 		# Smart hack: alter version suffix -> SOVERSION when linking
 		# against libc++. This way we won't end up mixing LLVM libc++
@@ -427,6 +421,16 @@ multilib_src_configure() {
 		)
 	fi
 
+	if tc-is-cross-compiler; then
+		local tblgen="${EPREFIX}/usr/lib/llvm/${LLVM_MAJOR}/bin/llvm-tblgen"
+		[[ -x "${tblgen}" ]] \
+			|| die "${tblgen} not found or usable"
+		mycmakeargs+=(
+			-DCMAKE_CROSSCOMPILING=ON
+			-DLLVM_TABLEGEN="${tblgen}"
+		)
+	fi
+
 	# workaround BMI bug in gcc-7 (fixed in 7.4)
 	# https://bugs.gentoo.org/649880
 	# apply only to x86, https://bugs.gentoo.org/650506
@@ -441,6 +445,12 @@ multilib_src_configure() {
 	# exhausting the limit on 32-bit linker executable
 	use x86 && local -x LDFLAGS="${LDFLAGS} -Wl,--no-keep-memory"
 
+    # Link polly against LLVM, #715612
+    if use polly; then
+        local -x LDFLAGS="${LDFLAGS} \
+            -L\"${EPREFIX}/usr/lib/llvm/${LLVM_MAJOR}/lib\" -lPolly -lPollyISL"
+    fi
+
 	# LLVM_ENABLE_ASSERTIONS=NO does not guarantee this for us, #614844
 	use debug || local -x CPPFLAGS="${CPPFLAGS} -DNDEBUG"
 	cmake_src_configure
@@ -452,7 +462,7 @@ multilib_src_configure() {
 }
 
 multilib_src_compile() {
-	tc-env_build cmake_build distribution
+	cmake_build distribution
 
 	pax-mark m "${BUILD_DIR}"/bin/llvm-rtdyld
 	pax-mark m "${BUILD_DIR}"/bin/lli
@@ -489,10 +499,6 @@ src_install() {
 
 multilib_src_install() {
 	DESTDIR=${D} cmake_build install-distribution
-
-    if use polly; then
-        DESTDIR=${D} cmake_build tools/polly/install
-    fi
 
 	# move headers to /usr/include for wrapping
 	rm -rf "${ED}"/usr/include || die
