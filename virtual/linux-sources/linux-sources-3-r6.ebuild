@@ -11,6 +11,7 @@ IUSE="firmware"
 RDEPEND="
 	firmware? ( sys-kernel/linux-firmware )
 	|| (
+	    sys-kernel/xanmod-sources
         sys-kernel/clear-sources
 		sys-kernel/gentoo-sources
 		sys-kernel/vanilla-sources
