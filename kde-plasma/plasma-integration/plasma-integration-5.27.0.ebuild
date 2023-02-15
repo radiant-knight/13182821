@@ -40,7 +40,6 @@ COMMON_DEPEND="
 	>=kde-frameworks/kwidgetsaddons-${KFMIN}:5
 	>=kde-frameworks/kwindowsystem-${KFMIN}:5
 	>=kde-frameworks/kxmlgui-${KFMIN}:5
-	>=kde-plasma/breeze-${PVCUT}:5
 	x11-libs/libXcursor
 	x11-libs/libxcb
 "
