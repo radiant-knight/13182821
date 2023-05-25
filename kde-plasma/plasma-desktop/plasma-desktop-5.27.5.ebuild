@@ -5,9 +5,9 @@ EAPI=8
 
 ECM_HANDBOOK="forceoptional"
 ECM_TEST="true"
-KFMIN=5.99.0
+KFMIN=5.102.0
 PVCUT=$(ver_cut 1-3)
-QTMIN=5.15.5
+QTMIN=5.15.7
 VIRTUALX_REQUIRED="test"
 inherit ecm plasma.kde.org optfeature
 
@@ -18,7 +18,7 @@ SRC_URI+=" https://dev.gentoo.org/~asturm/distfiles/${XORGHDRS}.tar.xz"
 LICENSE="GPL-2" # TODO: CHECK
 SLOT="5"
 KEYWORDS="amd64 ~arm arm64 ~loong ~ppc64 ~riscv x86"
-IUSE="emoji ibus +kaccounts scim screencast +semantic-desktop telemetry"
+IUSE="ibus +kaccounts scim screencast +semantic-desktop"
 
 # kde-frameworks/kwindowsystem[X]: Uses KX11Extras
 COMMON_DEPEND="
@@ -85,11 +85,6 @@ COMMON_DEPEND="
 	x11-libs/libxcb
 	x11-libs/libxkbcommon
 	x11-libs/libxkbfile
-	emoji? (
-		app-i18n/ibus[emoji]
-		dev-libs/glib:2
-		media-fonts/noto-emoji
-	)
 	ibus? (
 		app-i18n/ibus
 		dev-libs/glib:2
@@ -103,7 +98,6 @@ COMMON_DEPEND="
 	)
 	scim? ( app-i18n/scim )
 	semantic-desktop? ( >=kde-frameworks/baloo-${KFMIN}:5 )
-	telemetry? ( dev-libs/kuserfeedback:5 )
 "
 DEPEND="${COMMON_DEPEND}
 	>=dev-libs/wayland-protocols-1.25
@@ -112,7 +106,6 @@ DEPEND="${COMMON_DEPEND}
 "
 RDEPEND="${COMMON_DEPEND}
 	!<kde-plasma/kdeplasma-addons-5.25.50
-	!kde-plasma/user-manager
 	>=dev-qt/qtgraphicaleffects-${QTMIN}:5
 	>=dev-qt/qtquickcontrols2-${QTMIN}:5
 	>=dev-qt/qtwaylandscanner-${QTMIN}:5
@@ -120,6 +113,7 @@ RDEPEND="${COMMON_DEPEND}
 	>=kde-frameworks/qqc2-desktop-style-${KFMIN}:5
 	>=kde-plasma/kde-cli-tools-${PVCUT}:5
 	>=kde-plasma/oxygen-${PVCUT}:5
+	media-fonts/noto-emoji
 	sys-apps/util-linux
 	x11-apps/setxkbmap
 	x11-misc/xdg-user-dirs
@@ -133,7 +127,6 @@ BDEPEND="
 
 PATCHES=(
 	"${WORKDIR}/${XORGHDRS}/${PN}-5.25.80-override-include-dirs.patch" # downstream patch
-	"${FILESDIR}"/${P}-missing-kpackage-{1,2}.patch
 )
 
 src_prepare() {
@@ -143,9 +136,6 @@ src_prepare() {
 		sed -e "s/Qt5X11Extras_FOUND AND XCB_XCB_FOUND AND XCB_KEYSYMS_FOUND/false/" \
 			-i applets/kimpanel/backend/ibus/CMakeLists.txt || die
 	fi
-
-	use emoji || cmake_run_in applets/kimpanel/backend/ibus \
-		cmake_comment_add_subdirectory emojier
 
 	# TODO: try to get a build switch upstreamed
 	if ! use scim; then
@@ -160,14 +150,11 @@ src_configure() {
 		-DXORGLIBINPUT_INCLUDE_DIRS="${WORKDIR}/${XORGHDRS}"/include
 		-DXORGSERVER_INCLUDE_DIRS="${WORKDIR}/${XORGHDRS}"/include
 		-DSYNAPTICS_INCLUDE_DIRS="${WORKDIR}/${XORGHDRS}"/include
+		$(cmake_use_find_package ibus GLIB2)
 		$(cmake_use_find_package kaccounts AccountsQt5)
 		$(cmake_use_find_package kaccounts KAccounts)
 		$(cmake_use_find_package semantic-desktop KF5Baloo)
-		$(cmake_use_find_package telemetry KUserFeedback)
 	)
-	if ! use emoji && ! use ibus; then
-		mycmakeargs+=( -DCMAKE_DISABLE_FIND_PACKAGE_GLIB2=ON )
-	fi
 
 	ecm_src_configure
 }

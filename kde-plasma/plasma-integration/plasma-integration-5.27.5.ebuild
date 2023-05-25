@@ -3,9 +3,9 @@
 
 EAPI=8
 
-KFMIN=5.99.0
+KFMIN=5.102.0
 PVCUT=$(ver_cut 1-3)
-QTMIN=5.15.5
+QTMIN=5.15.7
 VIRTUALX_REQUIRED="test"
 inherit ecm plasma.kde.org
 
@@ -13,7 +13,7 @@ DESCRIPTION="Qt Platform Theme integration plugins for the Plasma workspaces"
 
 LICENSE="LGPL-2+"
 SLOT="5"
-KEYWORDS="~amd64 ~arm ~arm64 ~loong ~ppc64 ~riscv ~x86"
+KEYWORDS="amd64 ~arm arm64 ~loong ~ppc64 ~riscv x86"
 IUSE=""
 
 # requires running kde environment
@@ -49,6 +49,4 @@ DEPEND="${COMMON_DEPEND}
 RDEPEND="${COMMON_DEPEND}
 	media-fonts/hack
 "
-BDEPEND="
-	>=dev-qt/qtwaylandscanner-${QTMIN}:5
-"
+BDEPEND=">=dev-qt/qtwaylandscanner-${QTMIN}:5"
