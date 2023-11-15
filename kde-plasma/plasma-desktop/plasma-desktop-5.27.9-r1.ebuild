@@ -11,7 +11,7 @@ QTMIN=5.15.9
 inherit ecm plasma.kde.org optfeature
 
 DESCRIPTION="KDE Plasma desktop"
-XORGHDRS="${PN}-override-include-dirs-2"
+XORGHDRS="${PN}-override-include-dirs-3"
 SRC_URI+=" https://dev.gentoo.org/~asturm/distfiles/${XORGHDRS}.tar.xz"
 
 LICENSE="GPL-2" # TODO: CHECK
@@ -119,12 +119,14 @@ RDEPEND="${COMMON_DEPEND}
 	screencast? ( >=kde-plasma/kpipewire-${PVCUT}:5 )
 "
 BDEPEND="
+	dev-util/wayland-scanner
 	>=kde-frameworks/kcmutils-${KFMIN}:5
 	virtual/pkgconfig
 "
 
 PATCHES=(
-	"${WORKDIR}/${XORGHDRS}/${PN}-5.25.80-override-include-dirs.patch" # downstream patch
+	"${WORKDIR}/${XORGHDRS}/${P}-override-include-dirs.patch" # downstream patch
+	"${FILESDIR}/${P}-foldermodel-screen-add-remove-handling.patch" # in 5.27.10
 )
 
 src_prepare() {
